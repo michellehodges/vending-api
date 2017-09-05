@@ -102,20 +102,20 @@ function buyItem(money, item) {
           });
 }
 
-function getError(item) {
-  return Item.count({ where: { id: item } })
-    .then(count => {
-      if (count != 0) {
-        buyItem(item);
-        return (item);
-      } else {
-        return ("Sorry, we don't have that item in this machine.")
-      }
-    })
-}
+// function getError(item) {
+//   return Item.count({ where: { id: item } })
+//     .then(count => {
+//       if (count != 0) {
+//         buyItem(item);
+//         return (item);
+//       } else {
+//         return ("Sorry, we don't have that item in this machine.")
+//       }
+//     })
+// }
 
 function viewTotalMoneys(totalMoney) {
-  return Purchase.sum('price'); 
+  return Purchase.sum('price');
 }
 
 function viewPurchasedItems() {
