@@ -146,7 +146,6 @@ function addNewItem(item) {
 module.exports = {
   getListOfItems: getListOfItems,
   buyItem: buyItem,
-  getError: getError,
   viewTotalMoneys: viewTotalMoneys,
   viewPurchasedItems: viewPurchasedItems,
   updateItem: updateItem,
