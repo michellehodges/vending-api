@@ -1,7 +1,6 @@
 'use strict'
 /* This file exists because we want to be able to import this in two different places. */
 
-
 /*************** DATABASE SETUPS HERE ****************/
 const Sequelize = require('sequelize');
 
@@ -89,37 +88,73 @@ Item.sync()
 
 /*************** GLOBAL FUNCTIONS  HERE ****************/
 function getListOfItems() {
-    return Item.findAll();
+  return Item.findAll();
 }
 
-// A customer should be able to buy an item using money
-function buyItem() {}
+function buyItem(money, item) {
+  return Item.findOne({ where: { id: item } })
+          .then(function (data) {
+            if (money >= data.price) {
+              Item.update({ quantity: data.quantity - 1 }, { where: { name: data.name }})
+              Purchase.create({ name: data.name, price: data.price });
+              return money - data.price;
+            }
+          });
+}
 
-// A customer should be able to buy an item, paying more than the item is worth (imagine putting a dollar in a machine for a 65-cent item) and get correct change. This change is just an amount, not the actual coins.
-function buyAndGetChange() {}
+function getError(item) {
+  return Item.count({ where: { id: item } })
+    .then(count => {
+      if (count != 0) {
+        buyItem(item);
+        return (item);
+      } else {
+        return ("Sorry, we don't have that item in this machine.")
+      }
+    })
+}
 
-// A customer should not be able to buy items that are not in the machine, but instead get an error
-function getError() {}
-
+// TODO
 // A vendor should be able to see total amount of money in machine
-function viewTotalMoneys() {}
+function viewTotalMoneys(totalMoney) {
+  // return Purchase.findAll({
+  //   for (let i = 0; i < Purchase.length; i++) {
+  //     //add purchases.price here
+  //   }
+  // })
+}
 
-// A vendor should be able to see a list of all purchases with their time of purchase
-function viewListOfItems() {}
+function viewPurchasedItems() {
+  return Purchase.findAll();
+}
 
-// A vendor should be able to update the description, quantity, and costs of items in the machine
-function updateItem() {}
+function updateItem(item) {
+  return Item.findOne({ where: { id: item } })
+    .then(function(data){
+      Item.update({
+        name: data.name,
+        quantity: data.quantity,
+        price: data.price
+      })
+    })
+}
 
-// A vendor should be able to add a new item to the machine
-function addNewItem() {}
-
-
-
-
+function addNewItem(item) {
+  return Item.create({
+    name: item.name,
+    quantity: item.quantity,
+    price: item.price
+  });
+}
 
 
 /*************** MODULE EXPORTS HERE ****************/
-
 module.exports = {
   getListOfItems: getListOfItems,
+  buyItem: buyItem,
+  getError: getError,
+  viewTotalMoneys: viewTotalMoneys,
+  viewPurchasedItems: viewPurchasedItems,
+  updateItem: updateItem,
+  addNewItem: addNewItem
 };
