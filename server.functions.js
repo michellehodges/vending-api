@@ -114,14 +114,8 @@ function getError(item) {
     })
 }
 
-// TODO
-// A vendor should be able to see total amount of money in machine
 function viewTotalMoneys(totalMoney) {
-  // return Purchase.findAll({
-  //   for (let i = 0; i < Purchase.length; i++) {
-  //     //add purchases.price here
-  //   }
-  // })
+  return Purchase.sum('price'); 
 }
 
 function viewPurchasedItems() {

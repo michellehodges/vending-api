@@ -4,14 +4,13 @@ const server = require('./server.functions');
 describe('getListOfItems returns a bunch of items', function () {
   test('receive a promise with 12 items', function () {
     server.getListOfItems().then(function (items) {
-      expect(items.length).toBe(12);
+      expect(items.length).toBe(15);
     });
   });
 });
 
 describe('buyItem updates quantity and gives change', function () {
   test('updates item quantity', function () {
-
     server.addNewItem({
       name: 'No One Cares Candy',
       quantity: 5,
@@ -19,27 +18,72 @@ describe('buyItem updates quantity and gives change', function () {
     }).then(function (newCandy) {
       server.buyItem(5, newCandy.id).then(function (item) {
         expect(item.quantity).toBe(4);
+        //TODO: Need to delete candyBar that you added.
       });
     });
   });
 
-  //   test('creates new purchased item', function () {
-  //     server.buyItem().then(function (item) {
-  //       expect(Purchase.length).toBe(13);
-  //     });
-  // });
+  test('creates new purchased item', function () {
+    server.buyItem().then(function (item) {
+      expect(Purchase.length).toBe(13);
+    });
+  });
 });
 
-// describe('getError returns an error message', function () {
-//   test('returns an error message', function () {
-//     server.getError("chickadees").then(function (response) {
-//       expect(response).toBe("Sorry, we don't have that item in this machine.")
-//     })
-//   })
-// })
+describe('getError returns an error message', function () {
+  test('returns an error message', function () {
+    server.getError("chickadees").then(function (response) {
+      expect(response).toBe("Sorry, we don't have that item in this machine.")
+    })
+  })
+})
 
 
+function viewTotalMoneys(totalMoney) {
+  return Purchase.sum('price');
+}
 
+describe('viewTotalMoneys returns total of money', function () {
+  test('total money should return', function () {
+    server.viewTotalMoneys().then(function (total) {
+      expect(total).toBe(18.70)
+    })
+  })
+})
+
+describe('viewPurchasedItems returns all purchased items', function () {
+  test('purchased items should return', function () {
+    server.viewPurchasedItems().then(function(items) {
+      expect(items.length).toBe(13);
+    })
+  })
+})
+
+describe('updateItem updates... an item', function() {
+  test('items were updated', function () {
+    server.addNewItem({
+      name: 'Boom! Bars',
+      quantity: 5,
+      price: 0.45,
+    }).then(function (newCandy) {
+    server.updateItem(newCandy.id).then(function(item) {
+      expect(item.name).toBe('Snickers')
+      })
+    })
+  })
+})
+
+describe('addNewItem adds.... a new item', function() {
+  test('items were added', function () {
+    server.addNewItem({
+      name: 'Hey There, Healthbars',
+      quantity: 45,
+      price: 3.25,
+    }).then(function(items) {
+      expect(Items.length).toBe(14)
+    })
+  })
+})
 
 // describe('GET /', function() {
 //   test('responds with json', function() {
