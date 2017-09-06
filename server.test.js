@@ -12,31 +12,34 @@ describe('getListOfItems returns a bunch of items', function () {
 describe('buyItem updates quantity and gives change', function () {
   test('updates item quantity', function () {
     server.addNewItem({
-      name: 'No One Cares Candy',
+      name: 'Ben Candy',
       quantity: 5,
       price: 0.45,
     }).then(function (newCandy) {
       server.buyItem(5, newCandy.id).then(function (item) {
         expect(item.quantity).toBe(4);
-        //TODO: Need to delete candyBar that you added.
-      });
+      }).then(function (deleteCandy) {
+        Item.destroy({ where: { name: 'Ben Candy' } });
+      })
     });
   });
 
   test('creates new purchased item', function () {
-    server.buyItem().then(function (item) {
-      expect(Purchase.length).toBe(13);
+    let purchaseLength;
+    server.buyItem(3, 'Ramen cakes').then(function (item) {
+      purchaseLength = Purchase.length;
+      expect(purchaseLength).toBe(purchaseLength + 1);
     });
   });
 });
 
-describe('getError returns an error message', function () {
-  test('returns an error message', function () {
-    server.getError("chickadees").then(function (response) {
-      expect(response).toBe("Sorry, we don't have that item in this machine.")
-    })
-  })
-})
+// describe('getError returns an error message', function () {
+//   test('returns an error message', function () {
+//     server.getError("chickadees").then(function (response) {
+//       expect(response).toBe("Sorry, we don't have that item in this machine.")
+//     })
+//   })
+// })
 
 
 function viewTotalMoneys(totalMoney) {
@@ -46,7 +49,7 @@ function viewTotalMoneys(totalMoney) {
 describe('viewTotalMoneys returns total of money', function () {
   test('total money should return', function () {
     server.viewTotalMoneys().then(function (total) {
-      expect(total).toBe(18.70)
+      expect(total).toBe(18.25)
     })
   })
 })
