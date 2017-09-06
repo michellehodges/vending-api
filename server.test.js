@@ -4,7 +4,7 @@ const server = require('./server.functions');
 describe('getListOfItems returns a bunch of items', function () {
   test('receive a promise with 12 items', function () {
     server.getListOfItems().then(function (items) {
-      expect(items.length).toBe(15);
+      expect(items.length).toBe(13);
     });
   });
 });
@@ -18,38 +18,26 @@ describe('buyItem updates quantity and gives change', function () {
     }).then(function (newCandy) {
       server.buyItem(5, newCandy.id).then(function (item) {
         expect(item.quantity).toBe(4);
-      }).then(function (deleteCandy) {
-        Item.destroy({ where: { name: 'Ben Candy' } });
-      })
+      }).then(function() { deleteItem() })
     });
   });
 
   test('creates new purchased item', function () {
     let purchaseLength;
-    server.buyItem(3, 'Ramen cakes').then(function (item) {
-      purchaseLength = Purchase.length;
-      expect(purchaseLength).toBe(purchaseLength + 1);
-    });
+
+    return functions.getListOfItems().then(function(items) {
+      purchaseLength = items.length;
+      server.buyItem(3, 'Cloud9').then(function (item) {
+        expect(purchaseLength).toBe(purchaseLength + 1);
+      }).then(function () { deleteItem() });
+    })
   });
 });
-
-// describe('getError returns an error message', function () {
-//   test('returns an error message', function () {
-//     server.getError("chickadees").then(function (response) {
-//       expect(response).toBe("Sorry, we don't have that item in this machine.")
-//     })
-//   })
-// })
-
-
-function viewTotalMoneys(totalMoney) {
-  return Purchase.sum('price');
-}
 
 describe('viewTotalMoneys returns total of money', function () {
   test('total money should return', function () {
     server.viewTotalMoneys().then(function (total) {
-      expect(total).toBe(18.25)
+      expect(total).toBe(24.8)
     })
   })
 })
@@ -57,7 +45,7 @@ describe('viewTotalMoneys returns total of money', function () {
 describe('viewPurchasedItems returns all purchased items', function () {
   test('purchased items should return', function () {
     server.viewPurchasedItems().then(function(items) {
-      expect(items.length).toBe(13);
+      expect(items.length).toBe(17);
     })
   })
 })

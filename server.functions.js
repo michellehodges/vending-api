@@ -158,6 +158,10 @@ function addNewItem(item) {
           });
 }
 
+function deleteItem(item) {
+  Item.destroy({ where: { name: 'Ben Candy' } });
+}
+
 
 /*************** MODULE EXPORTS HERE ****************/
 module.exports = {
