@@ -125,10 +125,9 @@ function buyItem(money, itemName) {
 // }
 
 function viewTotalMoneys(totalMoney) {
-  return Purchase.sum('money_needed')
-    .catch(function (err) {
+  return Purchase.sum('money_needed').catch(function (err) {
       return Promise.reject('no money in machine')
-    });
+  });
 }
 
 function viewPurchasedItems() {
@@ -170,5 +169,7 @@ module.exports = {
   viewTotalMoneys: viewTotalMoneys,
   viewPurchasedItems: viewPurchasedItems,
   updateItem: updateItem,
-  addNewItem: addNewItem
+  addNewItem: addNewItem,
+  Item: Item,
+  Purchase: Purchase
 };
